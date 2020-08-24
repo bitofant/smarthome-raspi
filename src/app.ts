@@ -5,6 +5,9 @@ const log = logger(module);
 import express from 'express';
 const app = express();
 
+app.get('/', (req, res) => {
+  res.send('works!');
+});
 app.use('/log/', loggerExpressEndpoint);
 
 app.listen(8080, () => {

@@ -8,7 +8,9 @@
     "start": "node dist/app.js",
     "dev": "npm-run-all --parallel dev:build dev:start",
     "dev:build": "tsc --watch",
-    "dev:start": "nodemon dist/app.js"
+    "dev:start": "nodemon dist/app.js",
+    "forever:start": "forever start dist/app.js",
+    "forever:stop": "forever stop dist/app.js"
   },
   "repository": {
     "type": "git",

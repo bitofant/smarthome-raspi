@@ -17,6 +17,20 @@ hueActions.get('/connect/', (req, res) => {
   res.send('connecting...');
 });
 
+hueActions.get('/ip/', (req, res) => {
+  log('ip request: ' + hue.ip);
+  res.send(hue.ip);
+});
+
+hueActions.get('/ip/:ip', (req, res) => {
+  log('set ip request: ' + req.params.id);
+  res.json({
+    old: hue.ip,
+    new: req.params.ip
+  });
+  hue.ip = req.params.ip;
+});
+
 hueActions.get('/user/', (req, res) => {
   log('user request: ' + hue.user);
   res.send(hue.user);

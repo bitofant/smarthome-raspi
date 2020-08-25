@@ -11,6 +11,13 @@ hueActions.use((req, res, next) => {
   next();
 });
 
+hueActions.get('/', (req, res) => {
+  res.json({
+    ip: hue.ip,
+    user: hue.user
+  });
+});
+
 hueActions.get('/connect/', (req, res) => {
   log('connection request');
   hue.connect();

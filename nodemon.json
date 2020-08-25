@@ -1,6 +1,7 @@
 {
   "ignore": [
     "src",
-    "dist/log"
+    "dist/log",
+    "dist/userid"
   ]
 }

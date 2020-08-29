@@ -112,6 +112,62 @@ class Hue {
     });
   }
 
+  public async getGroups() {
+    return this.get<{[index: string]: Group}>('groups');
+  }
+
+  private async getGroupId(groupName: string) {
+    let groups = await this.getGroups();
+    for (let key in groups) {
+      if (groups[key].name.toLowerCase() === groupName.toLowerCase()) {
+        return key;
+      }
+    }
+    throw new Error('group "' + groupName + '" not found');
+  }
+
+  public async setGroup(groupName: string, hue: string, sat: string, bri: string) {
+    let id = await this.getGroupId(groupName);
+    return await this.put(`groups/${id}/action`, {
+      hue: parseInt(hue),
+      sat: parseInt(sat),
+      bri: parseInt(bri),
+      transitiontime: 2
+    });
+  }
+
+  public async blink(groupName: string, times: number) {
+    for (let i = 0; i < times; ++i) {
+      setTimeout(() => this.setGroup(groupName, '0', '0', '254'), i * 500);
+      setTimeout(() => this.setGroup(groupName, '0', '0', '0'), i * 500 + 250);
+    }
+  }
+
+  private async get<T>(method: string, body?: object) {
+    return this.api<T>('get', method, body);
+  }
+  private async put<T>(method: string, body?: object) {
+    return this.api<T>('put', method, body);
+  }
+
+  private async api<T>(httpMethod: 'get'|'put'|'post', method: string, body?: object) {
+    return new Promise<T>((resolve, reject) => {
+      request[httpMethod](`https://${this.ip}/api/${this.user}/${method}`, {
+        headers: {
+          "Content-type": 'text/json'
+        },
+        body: typeof(body) === 'undefined' ? undefined : JSON.stringify(body)
+      }, (err, res, body) => {
+        if (err) {
+          reject(err);
+        } else if (res.statusCode !== 200) {
+          reject(new Error('http status ' + res.statusCode));
+        } else {
+          resolve(JSON.parse(body));
+        }
+      });
+    });
+  }
 }
 
 const hue = new Hue();

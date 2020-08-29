@@ -52,4 +52,30 @@ hueActions.get('/user/:id', (req, res) => {
   hue.user = req.params.id;
 });
 
+
+hueActions.get('/groups/', (req, res) => {
+  hue
+    .getGroups()
+    .then(groups => res.json(groups))
+    .catch(err => res.status(503).json(err));
+});
+
+hueActions.get('/set/:group/:hue/:sat/:bri', (req, res) => {
+  log('asfd');
+  hue
+    .setGroup(
+      req.params.group,
+      req.params.hue,
+      req.params.sat,
+      req.params.bri
+    )
+    .then(obj => res.json(obj))
+    .catch(err => res.status(503).json(err));
+});
+
+hueActions.get('/blink/:group/:times', (req, res) => {
+  hue.blink(req.params.group, parseInt(req.params.times));
+  res.json({'o':'k'});
+});
+
 export default hueActions;

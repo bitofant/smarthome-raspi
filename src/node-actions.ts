@@ -11,8 +11,14 @@ nodeActions.get('/', (req, res) => {
 });
 
 nodeActions.get('/:nodemcu/:button/', (req, res) => {
-  log(req.params.nodemcu + ' / ' + req.params.button);
+  let nodeMcu = req.params.nodemcu;
+  let button = req.params.button;
   res.send('+OK');
+  if (button == "1") {
+    hue.setGroup("Living Room", '0', '0', '254');
+  } else if (button == "2") {
+    hue.setGroup("Living Room", '0', '0', '0');
+  }
 });
 
 export default nodeActions;

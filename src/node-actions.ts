@@ -15,9 +15,9 @@ nodeActions.get('/:nodemcu/:button/', (req, res) => {
   let button = req.params.button;
   res.send('+OK');
   if (button == "1") {
-    hue.setGroup("Living Room", '0', '0', '254');
+    hue.setGroup("Bedroom", '0', '0', '254');
   } else if (button == "2") {
-    hue.setGroup("Living Room", '0', '0', '0');
+    hue.setGroup("Bedroom", '0', '0', '0');
   }
 });
 

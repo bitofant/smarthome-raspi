@@ -26,19 +26,19 @@ nodeActions.get('/:nodemcu/:button/', (req, res) => {
 
 nodeActions.get('/door/0/', (req, res) => {
   res.send('+OK');
-  log('door => button 0 (no action)');
+  log('door => button 0');
+  toggleRoom('Bedroom', COLORS.bright);
 });
 
 nodeActions.get('/door/1/', (req, res) => {
   res.send('+OK');
   log('door => button 1');
-  toggleRoom('Bedroom', COLORS.bright);
+  toggleRoom('Bedroom', COLORS.dim);
 });
 
 nodeActions.get('/door/2/', (req, res) => {
   res.send('+OK');
-  log('door => button 2');
-  toggleRoom('Bedroom', COLORS.dim);
+  log('door => button 2 (no action)');
 });
 
 nodeActions.get('/door/3/', (req, res) => {

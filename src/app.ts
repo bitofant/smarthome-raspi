@@ -13,6 +13,16 @@ app.get('/', (req, res) => {
   res.send('works!');
 });
 
+app.get('/commit/', (req, res) => {
+  fs.readFile('.git/FETCH_HEAD', 'utf8', (err, data) => {
+    if (err) {
+      res.status(503).json(err);
+    } else {
+      res.send(/^([0-9,a-f,A-F]+)\s/.exec(data)?.pop());
+    }
+  });
+});
+
 app.use('/log/', loggerExpressEndpoint);
 app.use('/hue/', hueActions);
 app.use('/node/', nodeActions);

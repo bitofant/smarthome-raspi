@@ -10,7 +10,9 @@ import nodeActions from './node-actions';
 const app = express();
 
 app.use((req, res, next) => {
-  log(`express::${req.method}::${req.url}`);
+  if (!req.url.startsWith('/log/')) {
+    log(`express::${req.method}::${req.url}`);
+  }
   next();
 });
 

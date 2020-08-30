@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --incremental",
     "start": "forever start dist/app.js",
     "stop": "forever stop dist/app.js",
     "dev": "npm-run-all --parallel dev:build dev:start",

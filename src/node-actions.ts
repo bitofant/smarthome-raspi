@@ -26,16 +26,19 @@ nodeActions.get('/:nodemcu/:button/', (req, res) => {
 
 nodeActions.get('/door/0/', (req, res) => {
   res.send('+OK');
+  log('door => button 1');
   toggleRoom('Bedroom', COLORS.bright);
 });
 
 nodeActions.get('/door/1/', (req, res) => {
   res.send('+OK');
+  log('door => button 2');
   toggleRoom('Bedroom', COLORS.dim);
 });
 
 nodeActions.get('/door/2/', (req, res) => {
   res.send('+OK');
+  log('door => button 3 (no action)');
 });
 
 export default nodeActions;

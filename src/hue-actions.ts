@@ -65,9 +65,11 @@ hueActions.get('/set/:group/:hue/:sat/:bri', (req, res) => {
   hue
     .setGroup(
       req.params.group,
-      req.params.hue,
-      req.params.sat,
-      req.params.bri
+      {
+        hue: parseInt(req.params.hue),
+        sat: parseInt(req.params.sat),
+        bri: parseInt(req.params.bri)
+      }
     )
     .then(obj => res.json(obj))
     .catch(err => res.status(503).json(err));

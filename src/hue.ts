@@ -3,6 +3,8 @@ const log = logger(module);
 import request from 'request';
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = '0';
 import fs from 'fs';
+import { Group } from './hue-types/group';
+import { Action, OnOff, HSB } from './hue-types/action';
 
 const DEVICE_ID = 'smarthome#raspi';
 
@@ -32,9 +34,9 @@ class Hue {
   }
   set user(value: string) {
     this._user = value;
-    fs.writeFile('dist/userid', this.user, 'utf8', err => {
+    fs.writeFile('dist/config/userid', this.user, 'utf8', err => {
       if (err) log(err);
-      else log('user id persisted to dist/userid');
+      else log('user id persisted to dist/config/userid');
     });
   }
   get user() {
@@ -43,8 +45,8 @@ class Hue {
 
   constructor() {
     findHueIpAddress();
-    if (fs.existsSync('dist/userid')) {
-      this._user = fs.readFileSync('dist/userid', 'utf8');
+    if (fs.existsSync('dist/config/userid')) {
+      this._user = fs.readFileSync('dist/config/userid', 'utf8');
     }
   }
 
@@ -116,30 +118,43 @@ class Hue {
     return this.get<{[index: string]: Group}>('groups');
   }
 
-  private async getGroupId(groupName: string) {
+  public async getGroup(groupName: string) {
     let groups = await this.getGroups();
     for (let key in groups) {
       if (groups[key].name.toLowerCase() === groupName.toLowerCase()) {
-        return key;
+        return {
+          groupId: parseInt(key),
+          group: groups[key]
+        };
       }
     }
     throw new Error('group "' + groupName + '" not found');
   }
 
-  public async setGroup(groupName: string, hue: string, sat: string, bri: string) {
-    let id = await this.getGroupId(groupName);
-    return await this.put(`groups/${id}/action`, {
-      hue: parseInt(hue),
-      sat: parseInt(sat),
-      bri: parseInt(bri),
-      transitiontime: 2
-    });
+  private async getGroupId(groupName: string) {
+    return (await this.getGroup(groupName)).groupId;
+  }
+
+  public async setGroup(groupName: string|number, action: HSB | OnOff) {
+    let id = typeof(groupName) === "number"
+      ? groupName
+      : await this.getGroupId(groupName);
+    log(`set group ${id} to ${JSON.stringify(action)}`);
+    return await this.put(`groups/${id}/action`, action);
   }
 
   public async blink(groupName: string, times: number) {
     for (let i = 0; i < times; ++i) {
-      setTimeout(() => this.setGroup(groupName, '0', '0', '254'), i * 500);
-      setTimeout(() => this.setGroup(groupName, '0', '0', '0'), i * 500 + 250);
+      setTimeout(() => this.setGroup(groupName, {
+        hue: 0,
+        sat: 0,
+        bri: 254
+      }), i * 500);
+      setTimeout(() => this.setGroup(groupName, {
+        hue: 0,
+        sat: 0,
+        bri: 0
+      }), i * 500 + 250);
     }
   }
 

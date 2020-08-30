@@ -1,5 +1,7 @@
+import fs from 'fs';
+if (!fs.existsSync('dist/config')) fs.mkdirSync('dist/config');
 import logger, { loggerExpressEndpoint, LoggerSettings } from 'standalone-logger';
-LoggerSettings.logfile = 'dist/log';
+LoggerSettings.logfile = 'dist/config/log';
 const log = logger(module);
 
 import express from 'express';

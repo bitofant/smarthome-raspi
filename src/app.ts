@@ -9,6 +9,11 @@ import hueActions from './hue-actions';
 import nodeActions from './node-actions';
 const app = express();
 
+app.use((req, res, next) => {
+  log(`express::${req.method}::${req.url}`);
+  next();
+});
+
 app.get('/', (req, res) => {
   res.send('works!');
 });
